@@ -48,7 +48,7 @@ if  [[ "$total_numeber_of_images" -lt 1 ]];
 then
   exit
 else 
-  echo "searching for GPS info..."
+  echo "Scanning each image for GPS info..."
   counter=0
   for image_file in $all_images
   do
@@ -60,7 +60,7 @@ else
     fi
   done
 
-  if [[ "$output" == "" ]]
+  if ! [[ "$counter" == "0" ]]
   then
     echo "No images with GPS info found"
   else 
