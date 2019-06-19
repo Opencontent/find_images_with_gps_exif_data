@@ -60,7 +60,7 @@ else
     fi
   done
 
-  if ! [[ "$counter" == "0" ]]
+  if [[ $counter == "0" ]]
   then
     echo "No images with GPS info found"
   else 
