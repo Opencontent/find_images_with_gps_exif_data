@@ -38,12 +38,13 @@ fi
 
 
 # list all images
-all_images=`find . -type f | xargs -n1 file  | grep image | awk -F":" '{ print $1}'`
+# we identify images by having string  "image data" in output of 'file' command (we also include files with that string in name file, but is not an issue)
+all_images=`find $DIR -type f | xargs -n1 file  | grep " image data" | awk -F':' '{ print $1}'`
 
 # test each image for GPS info
 total_numeber_of_images=`echo $all_images| xargs -n1 | wc -l`
 echo "Found $total_numeber_of_images images while searching recursively in directory: $DIR"
-if  [[ "$counter" -lt 1 ]];
+if  [[ "$total_numeber_of_images" -lt 1 ]];
 then
   exit
 else 
