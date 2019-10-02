@@ -9,6 +9,7 @@
 #     1 : found images with GPS info
 #     0 : no images with GPS info found
 
+IDENTIFY_OUTPUT_TO_IGNORE="exif:GPSInfo\|exif:GPSVersionID"
 
 IDENTIFY=`which identify`
 if ! [ $? -eq 0 ]
@@ -52,7 +53,7 @@ else
   counter=0
   for image_file in $all_images
   do
-    output=`$IDENTIFY -format "%[EXIF:*GPS*]" $image_file`
+    output=`$IDENTIFY -format "%[EXIF:*GPS*]" $image_file | grep -v -e '^$' | grep -v $IDENTIFY_OUTPUT_TO_IGNORE`
     if ! [[ "$output" == "" ]]
     then
       echo "Found GPS info in image: $image_file"
