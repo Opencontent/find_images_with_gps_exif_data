@@ -66,7 +66,7 @@ else
       echo "Found GPS info in image: $image_file"
       counter=$((counter+1))
       echo "Removing gps data from image: $image_file"
-      $EXIFTOOL -gps:all= -xmp:geotag= -overwrite_original_in_place $image_file
+      $EXIFTOOL -gps:all= -xmp:geotag= -overwrite_original_in_place -P $image_file
     fi
   done
 
