@@ -5,9 +5,6 @@
 # 
 #  prerequisite: ImageMagick, exiftool
 # 
-# Exit code
-#     1 : found images with GPS info
-#     0 : no images with GPS info found
 
 IDENTIFY_OUTPUT_TO_IGNORE="exif:GPSInfo\|exif:GPSVersionID"
 
@@ -58,6 +55,7 @@ then
 else 
   echo "Scanning each image for GPS info..."
   counter=0
+  counter_for_modifications=0
   for image_file in $all_images
   do
     output=`$IDENTIFY -format "%[EXIF:*GPS*]" $image_file | grep -v -e '^$' | grep -v $IDENTIFY_OUTPUT_TO_IGNORE`
@@ -65,8 +63,16 @@ else
     then
       echo "Found GPS info in image: $image_file"
       counter=$((counter+1))
-      echo "Removing gps data from image: $image_file"
+      echo "Removing gps data it"
       $EXIFTOOL -gps:all= -xmp:geotag= -overwrite_original_in_place -P $image_file
+      if [ $? -eq 0 ]
+      then
+        counter_for_modifications=$((counter_for_modifications+1))   
+        echo "OK: Correctly removed GPS info"
+      else 
+        echo "ERR: something went wrong while removing GPS data from image:  $image_file"
+      fi
+
     fi
   done
 
@@ -74,7 +80,7 @@ else
   then
     echo "No images with GPS info found"
   else 
-    echo "Found a Total of $counter images with GPS info"
-    exit 1
+    echo "Number of images with GPS info in Exif data:      $counter"
+    echo "Number of images where GPS info has been removed: $counter_for_modifications"
   fi
 fi
